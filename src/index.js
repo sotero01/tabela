@@ -1,17 +1,61 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+let products = [];
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// eslint-disable-next-line no-unused-vars
+function addProduct() {
+    const productName = document.getElementById('productName').value;
+    const productPrice = parseFloat(document.getElementById('productPrice').value);
+
+    if (productName && !isNaN(productPrice)) {
+        const product = { name: productName, price: productPrice };
+        products.push(product);
+        updateTable();
+        clearForm();
+    }
+}
+
+// eslint-disable-next-line no-unused-vars
+function deleteProduct(index) {
+    products.splice(index, 1);
+    updateTable();
+}
+
+// eslint-disable-next-line no-unused-vars
+function editProduct(index) {
+    const newName = prompt('Novo nome do produto:');
+    const newPrice = parseFloat(prompt('Novo preço do produto:'));
+
+    if (newName && !isNaN(newPrice)) {
+        products[index].name = newName;
+        products[index].price = newPrice;
+        updateTable();
+    }
+}
+
+function clearForm() {
+    document.getElementById('productName').value = '';
+    document.getElementById('productPrice').value = '';
+}
+
+function updateTable() {
+    const tableBody = document.querySelector('#productTable tbody');
+    tableBody.innerHTML = '';
+
+    products.forEach((product, index) => {
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+
+        cell1.textContent = product.name;
+        cell2.textContent = product.price.toFixed(2);
+        cell3.innerHTML = `
+            <button onclick="editProduct(${index})">Editar</button>
+            <button onclick="deleteProduct(${index})">Deletar</button>
+        `;
+    });
+}
+
+updateTable();
+
+
